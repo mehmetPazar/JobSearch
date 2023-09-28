@@ -1,0 +1,74 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Features\" />
+    <None Remove="Features\Employer\" />
+    <None Remove="Features\ForbiddenWord\" />
+    <None Remove="Features\JobPosting\" />
+    <None Remove="Features\Employer\Commands\" />
+    <None Remove="Features\ForbiddenWord\Commands\" />
+    <None Remove="Features\JobPosting\Commands\" />
+    <None Remove="Features\Employer\Queries\" />
+    <None Remove="Features\ForbiddenWord\Queries\" />
+    <None Remove="Features\JobPosting\Queries\" />
+    <None Remove="Wrappers\" />
+    <None Remove="Common\" />
+    <None Remove="Features\Employer\Commands\CreateEmployer\" />
+    <None Remove="Features\Employer\Commands\DeleteEmployer\" />
+    <None Remove="Features\Employer\Commands\UpdateEmployer\" />
+    <None Remove="Features\Employer\Queries\GetAllEmployer\" />
+    <None Remove="Features\Employer\Queries\GetEmployerById\" />
+    <None Remove="Features\ForbiddenWord\Commands\CreateForbiddenWord\" />
+    <None Remove="Features\ForbiddenWord\Commands\DeleteForbiddenWord\" />
+    <None Remove="Features\ForbiddenWord\Commands\UpdateForbiddenWord\" />
+    <None Remove="Features\ForbiddenWord\Queries\GetAllForbiddenWord\" />
+    <None Remove="Features\JobPosting\Commands\CreateJobPosting\" />
+    <None Remove="Features\JobPosting\Commands\DeleteJobPosting\" />
+    <None Remove="Features\JobPosting\Commands\UpdateJobPosting\" />
+    <None Remove="Features\JobPosting\Queries\GetAllJobPosting\" />
+    <None Remove="Features\JobPosting\Queries\GetJobPostingById\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Features\" />
+    <Folder Include="Features\Employer\" />
+    <Folder Include="Features\ForbiddenWord\" />
+    <Folder Include="Features\JobPosting\" />
+    <Folder Include="Features\Employer\Commands\" />
+    <Folder Include="Features\ForbiddenWord\Commands\" />
+    <Folder Include="Features\JobPosting\Commands\" />
+    <Folder Include="Features\Employer\Queries\" />
+    <Folder Include="Features\ForbiddenWord\Queries\" />
+    <Folder Include="Features\JobPosting\Queries\" />
+    <Folder Include="Wrappers\" />
+    <Folder Include="Common\" />
+    <Folder Include="Features\Employer\Commands\CreateEmployer\" />
+    <Folder Include="Features\Employer\Commands\DeleteEmployer\" />
+    <Folder Include="Features\Employer\Commands\UpdateEmployer\" />
+    <Folder Include="Features\Employer\Queries\GetAllEmployer\" />
+    <Folder Include="Features\Employer\Queries\GetEmployerById\" />
+    <Folder Include="Features\ForbiddenWord\Commands\CreateForbiddenWord\" />
+    <Folder Include="Features\ForbiddenWord\Commands\DeleteForbiddenWord\" />
+    <Folder Include="Features\ForbiddenWord\Commands\UpdateForbiddenWord\" />
+    <Folder Include="Features\ForbiddenWord\Queries\GetAllForbiddenWord\" />
+    <Folder Include="Features\JobPosting\Commands\CreateJobPosting\" />
+    <Folder Include="Features\JobPosting\Commands\DeleteJobPosting\" />
+    <Folder Include="Features\JobPosting\Commands\UpdateJobPosting\" />
+    <Folder Include="Features\JobPosting\Queries\GetAllJobPosting\" />
+    <Folder Include="Features\JobPosting\Queries\GetJobPostingById\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="12.1.1" />
+    <PackageReference Include="AutoMapper" Version="12.0.1" />
+    <PackageReference Include="FluentValidation" Version="11.7.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Infrastructure\Persistence\Persistence.csproj" />
+    <ProjectReference Include="..\Domain\Domain.csproj" />
+  </ItemGroup>
+</Project>
