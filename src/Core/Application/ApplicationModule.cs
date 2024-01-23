@@ -16,43 +16,52 @@ using Autofac;
 using AutoMapper;
 using FluentValidation;
 using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace Application;
 
-public class ApplicationModulen : Autofac.Module
+public class ApplicationModule : Autofac.Module
 {
     protected override void Load(ContainerBuilder builder)
     {
+        builder.RegisterGeneric(typeof(Logger<>)).As(typeof(ILogger<>))
+            .SingleInstance();
+
         builder.RegisterAssemblyTypes(typeof(IMediator).GetTypeInfo().Assembly)
-                .AsImplementedInterfaces();
+            .AsImplementedInterfaces();
 
         builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
-           .Where(t => typeof(Profile).IsAssignableFrom(t))
-           .As<Profile>();
+            .Where(t => typeof(Profile).IsAssignableFrom(t))
+            .As<Profile>();
 
         builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
-           .Where(t => t.IsClosedTypeOf(typeof(IValidator<>)))
-           .AsImplementedInterfaces();
+            .Where(t => t.IsClosedTypeOf(typeof(IValidator<>)))
+            .AsImplementedInterfaces();
 
         builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
-        .AsClosedTypesOf(typeof(IRequestHandler<,>));
+            .AsClosedTypesOf(typeof(IRequestHandler<,>));
 
         builder.Register(context => new MapperConfiguration(cfg =>
-        {
-            cfg.AddProfile(new CreateEmployerMapper());
-            cfg.AddProfile(new UpdateEmployerMapper());
-            cfg.AddProfile(new GetAllEmployerMapper());
-            cfg.AddProfile(new GetEmployerByIdMapper());
-            cfg.AddProfile(new CreateForbiddenWordMapper());
-            cfg.AddProfile(new UpdateForbiddenWordMapper());
-            cfg.AddProfile(new GetAllForbiddenWordMapper());
-            cfg.AddProfile(new GetForbiddenWordByIdMapper());
-            cfg.AddProfile(new CreateJobPostingMapper());
-            cfg.AddProfile(new UpdateJobPostingMapper());
-            cfg.AddProfile(new GetAllJobPostingMapper());
-            cfg.AddProfile(new GetJobPostingByIdMapper());
-        }).CreateMapper()).As<IMapper>();
+            {
+                cfg.AddProfile(new CreateEmployerMapper());
+                cfg.AddProfile(new UpdateEmployerMapper());
+                cfg.AddProfile(new GetAllEmployerMapper());
+                cfg.AddProfile(new GetEmployerByIdMapper());
+                cfg.AddProfile(new CreateForbiddenWordMapper());
+                cfg.AddProfile(new UpdateForbiddenWordMapper());
+                cfg.AddProfile(new GetAllForbiddenWordMapper());
+                cfg.AddProfile(new GetForbiddenWordByIdMapper());
 
-        builder.RegisterGeneric(typeof(ValidatorBehavior<,>)).As(typeof(IPipelineBehavior<,>));
+                cfg.AddProfile(new CreateJobPostingMapper());
+                cfg.AddProfile(new UpdateJobPostingMapper());
+                cfg.AddProfile(new GetAllJobPostingMapper());
+                cfg.AddProfile(new GetJobPostingByIdMapper());
+            }).CreateMapper())
+            .As<IMapper>()
+            .SingleInstance();
+
+        builder.RegisterGeneric(typeof(ValidatorBehavior<,>))
+            .As(typeof(IPipelineBehavior<,>))
+            .SingleInstance();
     }
 }

@@ -1,7 +1,7 @@
-﻿using Application.Wrappers;
+﻿using Persistence.Repositories.Interfaces;
+using Application.Wrappers;
 using AutoMapper;
 using MediatR;
-using Persistence.Repositories.Interfaces;
 
 namespace Application.Features.Employer.Commands.UpdateEmployer;
 
@@ -18,11 +18,25 @@ public class UpdateEmployerCommand : IRequestHandler<UpdateEmployerRequest, Serv
 
     public async Task<ServiceResponse<long>> Handle(UpdateEmployerRequest request, CancellationToken cancellationToken)
     {
-        Domain.Entities.Employer updateEmployer = _mapper.Map<Domain.Entities.Employer>(request);
-        updateEmployer.LastModifiedBy = "ADMIN";
-        updateEmployer.LastModified = new DateTime();
+        try
+        {
+            Domain.Entities.Employer updateEmployer = _mapper.Map<Domain.Entities.Employer>(request);
+            updateEmployer.LastModifiedBy = "ADMIN";
+            updateEmployer.LastModified = new DateTime();
+            bool isSuccess = await _employerRepository.UpdateAsync(updateEmployer, request.Id);
 
-        bool isSuccess = await _employerRepository.UpdateAsync(updateEmployer, request.Id);
-        return new ServiceResponse<long>(request.Id) { IsSuccess = isSuccess };
+            if(isSuccess)
+            {
+                return new ServiceResponse<long>(request.Id) { IsSuccess = isSuccess };
+            }
+            else
+            {
+                return new ServiceResponse<long>(request.Id) { IsSuccess = isSuccess, Message = "An error occurred while performing the update request." };
+            }
+        }
+        catch (Exception ex)
+        {
+            return new ServiceResponse<long>(request.Id) { IsSuccess = false, Message = ex.Message.ToString() };
+        }
     }
 }

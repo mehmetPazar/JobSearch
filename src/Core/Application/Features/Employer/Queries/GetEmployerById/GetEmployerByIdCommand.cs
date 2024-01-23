@@ -1,7 +1,7 @@
-﻿using Application.Wrappers;
+﻿using Persistence.Repositories.Interfaces;
+using Application.Wrappers;
 using AutoMapper;
 using MediatR;
-using Persistence.Repositories.Interfaces;
 
 namespace Application.Features.Employer.Queries.GetEmployerById;
 
@@ -18,7 +18,14 @@ public class GetEmployerByIdCommand : IRequestHandler<GetEmployerByIdRequest, Se
 
     public async Task<ServiceResponse<GetEmployerByIdResponse>> Handle(GetEmployerByIdRequest request, CancellationToken cancellationToken)
     {
-        GetEmployerByIdResponse employer = _mapper.Map<GetEmployerByIdResponse>(await _employerRepository.GetByIdAsync(request.Id));
-        return new ServiceResponse<GetEmployerByIdResponse>(employer) { IsSuccess = true };
+        try
+        {
+            GetEmployerByIdResponse employer = _mapper.Map<GetEmployerByIdResponse>(await _employerRepository.GetByIdAsync(request.Id));
+            return new ServiceResponse<GetEmployerByIdResponse>(employer) { IsSuccess = true };
+        }
+        catch (Exception ex)
+        {
+            return new ServiceResponse<GetEmployerByIdResponse>(null) { IsSuccess = false, Message = ex.Message.ToString() };
+        }
     }
 }

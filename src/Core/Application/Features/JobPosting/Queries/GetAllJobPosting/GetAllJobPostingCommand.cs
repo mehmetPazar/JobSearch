@@ -1,7 +1,7 @@
-﻿using Application.Wrappers;
+﻿using Persistence.Repositories.Interfaces;
+using Application.Wrappers;
 using AutoMapper;
 using MediatR;
-using Persistence.Repositories.Interfaces;
 
 namespace Application.Features.JobPosting.Queries.GetAllJobPosting;
 
@@ -18,7 +18,14 @@ public class GetAllJobPostingCommand : IRequestHandler<GetAllJobPostingRequest, 
 
     public async Task<ServiceResponse<List<GetAllJobPostingResponse>>> Handle(GetAllJobPostingRequest request, CancellationToken cancellationToken)
     {
-        List<GetAllJobPostingResponse> jobPostings = _mapper.Map<List<GetAllJobPostingResponse>>(await _jobPostingRepository.GetAsync());
-        return new ServiceResponse<List<GetAllJobPostingResponse>>(jobPostings) { IsSuccess = true };
+        try
+        {
+            List<GetAllJobPostingResponse> jobPostings = _mapper.Map<List<GetAllJobPostingResponse>>(await _jobPostingRepository.GetAsync());
+            return new ServiceResponse<List<GetAllJobPostingResponse>>(jobPostings) { IsSuccess = true };
+        }
+        catch (Exception ex)
+        {
+            return new ServiceResponse<List<GetAllJobPostingResponse>>(null) { IsSuccess = false, Message = ex.Message.ToString() };
+        }
     }
 }

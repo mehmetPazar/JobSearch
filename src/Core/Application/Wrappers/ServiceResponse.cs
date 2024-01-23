@@ -2,10 +2,10 @@
 
 public class ServiceResponse<T> : BaseResponse
 {
-    public T Value { get; set; }
+    public T Data { get; set; }
 
-    public ServiceResponse(T value)
+    public ServiceResponse(T data)
     {
-        Value = value;
+        Data = data;
     }
 }

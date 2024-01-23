@@ -1,7 +1,7 @@
-﻿using Application.Wrappers;
+﻿using Persistence.Repositories.Interfaces;
+using Application.Wrappers;
 using AutoMapper;
 using MediatR;
-using Persistence.Repositories.Interfaces;
 
 namespace Application.Features.ForbiddenWord.Queries.GetForbiddenWordById;
 
@@ -18,7 +18,14 @@ public class GetForbiddenWordByIdCommand : IRequestHandler<GetForbiddenWordByIdR
 
     public async Task<ServiceResponse<GetForbiddenWordByIdResponse>> Handle(GetForbiddenWordByIdRequest request, CancellationToken cancellationToken)
     {
-        GetForbiddenWordByIdResponse forbiddenWord = _mapper.Map<GetForbiddenWordByIdResponse>(await _forbiddenWordRepository.GetByIdAsync(request.Id));
-        return new ServiceResponse<GetForbiddenWordByIdResponse>(forbiddenWord) { IsSuccess = true };
+        try
+        {
+            GetForbiddenWordByIdResponse forbiddenWord = _mapper.Map<GetForbiddenWordByIdResponse>(await _forbiddenWordRepository.GetByIdAsync(request.Id));
+            return new ServiceResponse<GetForbiddenWordByIdResponse>(forbiddenWord) { IsSuccess = true };
+        }
+        catch (Exception ex)
+        {
+            return new ServiceResponse<GetForbiddenWordByIdResponse>(null) { IsSuccess = false, Message = ex.Message.ToString() };
+        }
     }
 }

@@ -1,7 +1,7 @@
-﻿using Application.Wrappers;
+﻿using Persistence.Repositories.Interfaces;
+using Application.Wrappers;
 using AutoMapper;
 using MediatR;
-using Persistence.Repositories.Interfaces;
 
 namespace Application.Features.ForbiddenWord.Commands.UpdateForbiddenWord;
 
@@ -18,11 +18,25 @@ public class UpdateForbiddenWordCommand : IRequestHandler<UpdateForbiddenWordReq
 
     public async Task<ServiceResponse<long>> Handle(UpdateForbiddenWordRequest request, CancellationToken cancellationToken)
     {
-        Domain.Entities.ForbiddenWord updateForbiddenWord = _mapper.Map<Domain.Entities.ForbiddenWord>(request);
-        updateForbiddenWord.LastModifiedBy = "ADMIN";
-        updateForbiddenWord.LastModified = new DateTime();
+        try
+        {
+            Domain.Entities.ForbiddenWord updateForbiddenWord = _mapper.Map<Domain.Entities.ForbiddenWord>(request);
+            updateForbiddenWord.LastModifiedBy = "ADMIN";
+            updateForbiddenWord.LastModified = new DateTime();
+            bool isSuccess = await _forbiddenWordRepository.UpdateAsync(updateForbiddenWord, request.Id);
 
-        bool isSuccess = await _forbiddenWordRepository.UpdateAsync(updateForbiddenWord, request.Id);
-        return new ServiceResponse<long>(request.Id) { IsSuccess = isSuccess };
+            if (isSuccess)
+            {
+                return new ServiceResponse<long>(request.Id) { IsSuccess = isSuccess };
+            }
+            else
+            {
+                return new ServiceResponse<long>(request.Id) { IsSuccess = isSuccess, Message = "An error occurred while performing the update request." };
+            }
+        }
+        catch (Exception ex)
+        {
+            return new ServiceResponse<long>(request.Id) { IsSuccess = false, Message = ex.Message.ToString() };
+        }
     }
 }

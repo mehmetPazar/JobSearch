@@ -1,8 +1,8 @@
 ﻿namespace Application.Wrappers;
 
-public class BaseResponse
+public abstract class BaseResponse : RestModelBase
 {
-    public Guid Id { get; set; } = new Guid();
+    public Guid Id { get; set; } = Guid.NewGuid();
 
     public string Message { get; set; }
 

@@ -1,7 +1,7 @@
-﻿using Application.Wrappers;
+﻿using Persistence.Repositories.Interfaces;
+using Application.Wrappers;
 using AutoMapper;
 using MediatR;
-using Persistence.Repositories.Interfaces;
 
 namespace Application.Features.JobPosting.Queries.GetJobPostingById;
 
@@ -18,7 +18,14 @@ public class GetJobPostingByIdCommand : IRequestHandler<GetJobPostingByIdRequest
 
     public async Task<ServiceResponse<GetJobPostingByIdResponse>> Handle(GetJobPostingByIdRequest request, CancellationToken cancellationToken)
     {
-        GetJobPostingByIdResponse jobPosting = _mapper.Map<GetJobPostingByIdResponse>(await _jobPostingRepository.GetByIdAsync(request.Id));
-        return new ServiceResponse<GetJobPostingByIdResponse>(jobPosting) { IsSuccess = true };
+        try
+        {
+            GetJobPostingByIdResponse jobPosting = _mapper.Map<GetJobPostingByIdResponse>(await _jobPostingRepository.GetByIdAsync(request.Id));
+            return new ServiceResponse<GetJobPostingByIdResponse>(jobPosting) { IsSuccess = true };
+        }
+        catch (Exception ex)
+        {
+            return new ServiceResponse<GetJobPostingByIdResponse>(null) { IsSuccess = true, Message = ex.Message.ToString() };
+        }
     }
 }
